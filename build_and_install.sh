@@ -27,8 +27,13 @@ cp hello.c Makefile /usr/src/linux-$kernel_full_v/hello/
 sed -ri 's/core-y.*kernel.*/& hello\//' /usr/src/linux-$kernel_full_v/Makefile &&
 sed -ri 's/^#endif$/asmlinkage long sys_hello(void);\n&/' /usr/src/linux-$kernel_full_v/include/linux/syscalls.h
 
-sed -rie 'N;s/([0-9]+).*\n^$/&\1\n/;P;D' /usr/src/linux-4.13.9/arch/x86/entry/syscalls/syscall_64.tbl
+sed -rie 'N;s/([0-9]+).*\n^$/&\1\n/;P;D' /usr/src/linux-$kernel_full_v/arch/x86/entry/syscalls/syscall_64.tbl &&
+sys_call_num=$(($(grep -E "^[0-9]+$" /usr/src/linux-$kernel_full_v/arch/x86/entry/syscalls/syscall_64.tbl)+1)) &&
+sed -ri "s/^[0-9]+$/$sys_call_num\t64\thello\t\t\tsys_hello/g" /usr/src/linux-$kernel_full_v/arch/x86/entry/syscalls/syscall_64.tbl
 
-sys_call_num=$(($(grep -E "^[0-9]+$" /usr/src/linux-4.13.9/arch/x86/entry/syscalls/syscall_64.tbl)+1))
+cd /usr/src/linux-$kernel_full_v &&
+make defconfig &&
+make &&
+make modules_install
 
-sed -ri "s/^[0-9]+$/$sys_call_num\t64\thello\t\t\tsys_hello/g" /usr/src/linux-4.13.9/arch/x86/entry/syscalls/syscall_64.tbl
+reboot now

@@ -3,8 +3,8 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
-Int main() {
-    Long int amm = syscall(333);
-    printf("Sys call returned %ld\n", amma);
-    Return 0;
+int main() {
+    long int ret = syscall(333);
+    printf("Sys call returned %ld\n", ret);
+    return 0;
 }
