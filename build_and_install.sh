@@ -3,17 +3,20 @@
 test $EUID -ne 0 &&
 { echo "This script must be run as root"; exit 1; }
 
+apt-get update &&
+apt-get upgrade -y &&
 apt-get install -y \
     wget \
     make \
     gcc \
-    libssl-dev
+    libssl-dev \
+    libncursesw5-dev
 
 kernel_major_v="4"
-kernel_minor_v="13.9"
+kernel_minor_v="13.11"
 kernel_full_v="$kernel_major_v.$kernel_minor_v"
 
-rm -rf /usr/src/linux-$kernel_full_v &&
+rm -rf /usr/src/linux-$kernel_full_v linux-$kernel_full_v.tar.gz &&
 wget https://www.kernel.org/pub/linux/kernel/v$kernel_major_v.x/linux-$kernel_full_v.tar.gz &&
 tar -xvf linux-$kernel_full_v.tar.gz -C/usr/src/ &&
 rm -rf linux-$kernel_full_v.tar.gz
@@ -32,8 +35,11 @@ sys_call_num=$(($(grep -E "^[0-9]+$" /usr/src/linux-$kernel_full_v/arch/x86/entr
 sed -ri "s/^[0-9]+$/$sys_call_num\t64\thello\t\t\tsys_hello/g" /usr/src/linux-$kernel_full_v/arch/x86/entry/syscalls/syscall_64.tbl
 
 cd /usr/src/linux-$kernel_full_v &&
-make defconfig &&
+make menuconfig &&
 make &&
-make modules_install
+make modules_install install
+
+test $? -ne 0 &&
+{ echo "Unable to compile and install kernel, possibly a dependecy issue."; exit 1; }
 
 reboot now
