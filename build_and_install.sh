@@ -1,7 +1,7 @@
 #!/bin/bash
 
 test $EUID -ne 0 &&
-{ echo "This script must be run as root"; exit 1; }
+{ echo "This script must be run as root" >&2; exit 1; }
 
 apt-get update &&
 apt-get upgrade -y &&
@@ -10,7 +10,8 @@ apt-get install -y \
     make \
     gcc \
     libssl-dev \
-    libncursesw5-dev
+    libncursesw5-dev \
+    runc
 
 kernel_major_v="4"
 kernel_minor_v="13.11"
@@ -22,7 +23,7 @@ tar -xvf linux-$kernel_full_v.tar.gz -C/usr/src/ &&
 rm -rf linux-$kernel_full_v.tar.gz
 
 test $? -ne 0 &&
-{ echo "Failled to download/untar linux kernel $kernel_full_v, make sure you picked a valid version."; exit 1; }
+{ echo "Failled to download/untar linux kernel $kernel_full_v, make sure you picked a valid version." >&2 ; exit 1; }
 
 mkdir /usr/src/linux-$kernel_full_v/hello &&
 cp hello.c Makefile /usr/src/linux-$kernel_full_v/hello/
@@ -36,10 +37,10 @@ sed -ri "s/^[0-9]+$/$sys_call_num\t64\thello\t\t\tsys_hello/g" /usr/src/linux-$k
 
 cd /usr/src/linux-$kernel_full_v &&
 make menuconfig &&
-make &&
+make -j$(nproc) &&
 make modules_install install
 
 test $? -ne 0 &&
-{ echo "Unable to compile and install kernel, possibly a dependecy issue."; exit 1; }
+{ echo "Unable to compile and install kernel, possibly a dependecy issue." >&2; exit 1; }
 
 reboot now
