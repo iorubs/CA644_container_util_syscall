@@ -36,7 +36,7 @@ sed -ri "s/^[0-9]+$/$sys_call_num\t64\thello\t\t\tsys_hello/g" /usr/src/linux-$k
 
 cd /usr/src/linux-$kernel_full_v &&
 make menuconfig &&
-make &&
+make -j$(nproc) &&
 make modules_install install
 
 test $? -ne 0 &&
