@@ -10,7 +10,8 @@ apt-get install -y \
     make \
     gcc \
     libssl-dev \
-    libncursesw5-dev
+    libncursesw5-dev \
+    runc
 
 kernel_major_v="4"
 kernel_minor_v="13.11"
