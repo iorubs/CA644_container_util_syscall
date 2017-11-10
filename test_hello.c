@@ -37,17 +37,17 @@ int manage_container(int i) {
 
  	if(manage_choice == 1) {
   	printf("\nKilling Container With Id: %d\n\n",i);
-  	long int amma = syscall(333,container_id,container_action_1);
+  	long int amma = syscall(333,container_action_1,container_id);
   	return amma;
  	}
  	else if(manage_choice == 2){
   	printf("\nStoping Container With Id: %d\n\n",i);
-  	long int amma = syscall(333,container_id,container_action_2);
+  	long int amma = syscall(333,container_action_2,container_id);
   	return amma;
  	}
  	else if(manage_choice == 3){
   	printf("\nStarting Container With Id: %d\n\n",i);
-  	long int amma = syscall(333,container_id,container_action_3);
+  	long int amma = syscall(333,container_action_3,container_id);
   	return amma;
  	}
  	else {
@@ -64,12 +64,12 @@ int create_container(int i) {
 
     if(i == 1) {
      printf("\nCreating Busy Box...\n\n");
-     long int amma = syscall(333,container_id,container_action);
+     long int amma = syscall(333,container_action,container_id);
      return amma;
     }
     else if(i == 2) {
      printf("\nCreating Alpine Box...\n\n");
-     long int amma = syscall(333,container_id,container_action);
+     long int amma = syscall(333,container_action,container_id);
      return 0;
     }
     else {

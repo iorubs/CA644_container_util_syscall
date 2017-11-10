@@ -1,7 +1,7 @@
 #include <linux/kernel.h>
 #include <linux/kmod.h>
 
-asmlinkage long sys_hello(char *container_id,char *container_action) {
+asmlinkage long sys_hello(char *container_action,char *container_id) {
 
     printk("Container Id :  %s\n", container_id);
     printk("Container Action :  %s\n", container_action);
