@@ -10,7 +10,7 @@ asmlinkage long sys_hello(int container_action, char *action_arg) {
         argv[2] = "/bin/runc create test";
     }
     else if (container_action == 2) {
-        argv[2] = "/bin/runc list > /tmp/log";
+        argv[2] = "/bin/runc list > /tmp/ca644_util_log";
     }
     else if (container_action == 3) {
         argv[2] = "/bin/runc start";
@@ -19,7 +19,7 @@ asmlinkage long sys_hello(int container_action, char *action_arg) {
         argv[2] = "/bin/runc delete test";
     }
     else if (container_action == 6) {
-        argv[2] = "/bin/runc ps test > /tmp/log";
+        argv[2] = "/bin/runc ps test > /tmp/ca644_util_log";
     }
     else {
         return 666;

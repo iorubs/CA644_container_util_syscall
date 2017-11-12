@@ -94,7 +94,7 @@ int main() {
         case(2):
             printf("\n --- List Containers --- \n\n");
             ret_code = syscall(333, 2, NULL);
-            display_file("/tmp/ca644_container_util/log");
+            display_file("/tmp/ca644_util_log");
             break;
         case(3):
             printf("\nEnter Container ID : ");
