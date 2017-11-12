@@ -53,24 +53,18 @@ int manage_container(int i) {
 }
 
 int create_container(int i) {
-    char container_action[12];
-    sprintf(container_action, "%d", i);
-    char *container_id = "0";
+    char *container_type = "none";
 
     if(i == 1) {
-        printf("\nCreating Busy Box...\n\n");
-        long int ret_code = syscall(333, container_action, container_id);
-        return ret_code;
+        printf("\nCreating BusyBox container...\n\n");
+        container_type = "alpine"
     }
     else if(i == 2) {
-        printf("\nCreating Alpine Box...\n\n");
-        long int ret_code = syscall(333, container_action, container_id);
-        return 0;
+        printf("\nCreating new Alpine container...\n\n");
+        container_type = "busybox"
     }
-    else {
-        printf("\nInvalid Choice Exiting...\n\n");
-        return 0;
-    }
+
+    return syscall(333, 1, container_type);
 }
 
 int main() {

@@ -13,10 +13,11 @@ apt-get install -y \
     libncursesw5-dev \
     runc
 
-# Move container rootfs into tmp, so syscall can create container.
-rm -rf /tmp/ca644_container_util &&
-mkdir /tmp/ca644_container_util &&
-cp -R ca644_alpine /tmp/ca644_container_util/
+# Add runc to the bin folder
+cp /usr/sbin/runc /bin/
+
+# Move contaner rootfs into / for now, so syscall can create container.
+cp -R ca644_alpine/* /
 
 # Download kernel
 kernel_major_v="4"
@@ -51,4 +52,6 @@ make modules_install install
 test $? -ne 0 &&
 { echo "Unable to compile and install kernel, possibly a dependecy issue." >&2; exit 1; }
 
+mkinitramfs -o /boot/initrd.img-$kernel_full_v $kernel_full_v &&
+update-grub &&
 reboot now
