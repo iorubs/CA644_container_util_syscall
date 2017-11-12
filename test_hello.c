@@ -57,11 +57,11 @@ int create_container(int i) {
 
     if(i == 1) {
         printf("\nCreating BusyBox container...\n\n");
-        container_type = "alpine"
+        // container_type = "alpine";
     }
     else if(i == 2) {
         printf("\nCreating new Alpine container...\n\n");
-        container_type = "busybox"
+        // container_type = "busybox";
     }
 
     return syscall(333, 1, container_type);

@@ -6,19 +6,26 @@ asmlinkage long sys_hello(int container_action, char *action_arg) {
     char * envp[] = {"HOME=/", NULL};
     char * argv[] = {"/bin/bash", "-c", "command", NULL};
 
+    printk("Container Action :  %d\n", container_action);
+
     if (container_action == 1) {
-        argv[2] = "/bin/runc create test";
+        printk("Running container create.\n");
+        argv[2] = "/bin/runc create test > /tmp/ca644_util_log";
     }
     else if (container_action == 2) {
+        printk("Running container list.\n");
         argv[2] = "/bin/runc list > /tmp/ca644_util_log";
     }
     else if (container_action == 3) {
-        argv[2] = "/bin/runc start";
+        printk("Running container start.\n");
+        argv[2] = "/bin/runc start > /tmp/ca644_util_log";
     }
     else if (container_action == 4) {
-        argv[2] = "/bin/runc delete test";
+        printk("Running container delete.\n");
+        argv[2] = "/bin/runc delete test > /tmp/ca644_util_log";
     }
     else if (container_action == 6) {
+        printk("Running container ps.\n");
         argv[2] = "/bin/runc ps test > /tmp/ca644_util_log";
     }
     else {
@@ -26,7 +33,5 @@ asmlinkage long sys_hello(int container_action, char *action_arg) {
     }
 
 
-    call_usermodehelper(argv[0], argv, envp, UMH_WAIT_EXEC);
-
-    return 0;
+    return call_usermodehelper(argv[0], argv, envp, UMH_WAIT_EXEC);
 }
