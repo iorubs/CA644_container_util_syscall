@@ -13,6 +13,12 @@ apt-get install -y \
     libncursesw5-dev \
     runc
 
+# Move container rootfs into tmp, so syscall can create container.
+rm -rf /tmp/ca644_container_util &&
+mkdir /tmp/ca644_container_util &&
+cp -R ca644_alpine /tmp/ca644_container_util/
+
+# Download kernel
 kernel_major_v="4"
 kernel_minor_v="13.11"
 kernel_full_v="$kernel_major_v.$kernel_minor_v"
@@ -25,6 +31,7 @@ rm -rf linux-$kernel_full_v.tar.gz
 test $? -ne 0 &&
 { echo "Failled to download/untar linux kernel $kernel_full_v, make sure you picked a valid version." >&2 ; exit 1; }
 
+# Add new system call
 mkdir /usr/src/linux-$kernel_full_v/hello &&
 cp hello.c Makefile /usr/src/linux-$kernel_full_v/hello/
 
@@ -35,6 +42,7 @@ sed -rie 'N;s/([0-9]+).*\n^$/&\1\n/;P;D' /usr/src/linux-$kernel_full_v/arch/x86/
 sys_call_num=$(($(grep -E "^[0-9]+$" /usr/src/linux-$kernel_full_v/arch/x86/entry/syscalls/syscall_64.tbl)+1)) &&
 sed -ri "s/^[0-9]+$/$sys_call_num\t64\thello\t\t\tsys_hello/g" /usr/src/linux-$kernel_full_v/arch/x86/entry/syscalls/syscall_64.tbl
 
+# Compile kernel and install kernel modules.
 cd /usr/src/linux-$kernel_full_v &&
 make menuconfig &&
 make -j$(nproc) &&
