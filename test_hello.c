@@ -87,12 +87,14 @@ int main() {
 
     int menu_option;
     int container_id_size = 20;
-    char *container_id = (char*)malloc(container_id_size);
+    char container_id[container_id_size];
     long int ret_code;
 
-    printf("1. Create Container\n");
-    printf("2. List Containers\n");
-    printf("3. Manage Containers\n\n");
+    printf("1. List Containers\n");
+    printf("2. Start Container\n");
+    printf("3. Delete Container\n");
+    printf("4. List services inside Container\n");
+    printf("5. Create Container\n");
     printf("Choose Option From Menu Above 1-3: ");
     scanf("%d", &menu_option);
 
@@ -104,18 +106,21 @@ int main() {
             break;
         case(2):
             printf("\n --- Start Container --- \n\n");
-            fgets(container_id, container_id_size, stdin);
-            ret_code = syscall(333, menu_option, container_id);
+            if(fgets(container_id, container_id_size, stdin) != NULL) {
+                ret_code = syscall(333, menu_option, container_id);
+            }
             break;
         case(3):
             printf("\n --- Delete Container --- \n\n");
-            fgets(container_id, container_id_size, stdin);
-            ret_code = syscall(333, menu_option, container_id);
+            if(fgets(container_id, container_id_size, stdin) != NULL) {
+                ret_code = syscall(333, menu_option, container_id);
+            }
             break;
         case(4):
             printf("\n --- List services inside container --- \n\n");
-            fgets(container_id, container_id_size, stdin);
-            ret_code = syscall(333, menu_option, container_id);
+            if(fgets(container_id, container_id_size, stdin) != NULL) {
+                ret_code = syscall(333, menu_option, container_id);
+            }
             break;
         case(5):
             printf("\n --- Create Container --- \n\n");
@@ -124,6 +129,4 @@ int main() {
         default:
             printf("\n Invalid Choice! \n");
     }
-
-    free(container_id);
 }

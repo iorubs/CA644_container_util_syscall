@@ -7,7 +7,7 @@ asmlinkage long sys_hello(int container_action, char *container_id) {
         "HOME=/",
         "TERM=linux",
         "PWD=/",
-        "PATH=/sbin:/bin:/usr/sbin:/usr/bin", NULL };
+        "PATH=/bin:/usr/sbin", NULL };
 
     char * argv[] = {"/bin/bash", "-c", "command", NULL};
 
@@ -16,7 +16,7 @@ asmlinkage long sys_hello(int container_action, char *container_id) {
 
     if (container_action == 1) {
         printk("Running container list.\n");
-        argv[2] = "runc list 2>&1 > /tmp/ca644_util_log";
+        argv[2] = "runc list > /tmp/ca644_util_log";
     }
     else if (container_action == 2) {
         printk("Running container start.\n");
