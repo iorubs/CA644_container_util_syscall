@@ -13,12 +13,6 @@ apt-get install -y \
     libncursesw5-dev \
     runc
 
-# Add runc to the bin folder
-cp /usr/sbin/runc /bin/
-
-# Move contaner rootfs into / for now, so syscall can create container.
-cp -R ca644_alpine/* /
-
 # Download kernel
 kernel_major_v="4"
 kernel_minor_v="13.11"

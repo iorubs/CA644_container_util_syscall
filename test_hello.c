@@ -64,7 +64,7 @@ int create_container(int i) {
         // container_type = "busybox";
     }
 
-    return syscall(333, 1, container_type);
+    return 0;
 }
 
 int main() {
@@ -72,7 +72,9 @@ int main() {
     printf("        Container Util - System Call      \n");
     printf("------------------------------------------\n\n");
 
-    int menu_option, new_container_choice, container_id_choice;
+    int menu_option, new_container_type;
+    int container_id_size = 20;
+    char *container_id = (char*)malloc(container_id_size);
     long int ret_code;
 
     printf("1. Create Container\n");
@@ -83,38 +85,36 @@ int main() {
 
     switch(menu_option) {
         case(1):
-            // printf("\n --- Choose New Container Type --- \n\n");
-            // printf("1. BusyBox Container \n");
-            // printf("2. Apline Container \n");
-            // printf("\nChoose Option From Menu Above 1-2: ");
-            // scanf("%d", &new_container_choice);
-            // create_container(new_container_choice);
-            printf("\n --- Create Container --- \n\n");
-            ret_code = syscall(333, 1, NULL);
-            break;
-        case(2):
             printf("\n --- List Containers --- \n\n");
-            ret_code = syscall(333, 2, NULL);
+            ret_code = syscall(333, menu_option, NULL);
             display_file("/tmp/ca644_util_log");
             break;
-        case(3):
-            // printf("\nEnter Container ID : ");
-            // scanf("%d", &container_id_choice);
-            // manage_container(container_id_choice);
-            // break;
+        case(2):
             printf("\n --- Start Container --- \n\n");
-            ret_code = syscall(333, 3, NULL);
+            fgets(container_id, container_id_size, stdin);
+            ret_code = syscall(333, menu_option, container_id);
+            break;
+        case(3):
+            printf("\n --- Delete Container --- \n\n");
+            fgets(container_id, container_id_size, stdin);
+            ret_code = syscall(333, menu_option, container_id);
             break;
         case(4):
-            printf("\n --- Delete Container --- \n\n");
-            ret_code = syscall(333, 4, NULL);
+            printf("\n --- List services inside container --- \n\n");
+            fgets(container_id, container_id_size, stdin);
+            ret_code = syscall(333, menu_option, container_id);
             break;
         case(5):
-            printf("\n --- List services inside container --- \n\n");
-            ret_code = syscall(333, 5, NULL);
+            printf("\n --- Choose New Container Type --- \n\n");
+            printf("1. BusyBox Container \n");
+            printf("2. Apline Container \n");
+            printf("\nChoose Option From Menu Above 1-2: ");
+            scanf("%d", &new_container_type);
+            create_container(new_container_type);
             break;
         default:
             printf("\n Invalid Choice! \n");
-            break;
     }
+
+    free(temp);
 }
