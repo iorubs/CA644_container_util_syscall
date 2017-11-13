@@ -52,19 +52,32 @@ int manage_container(int i) {
     }
 }
 
-int create_container(int i) {
-    char *container_type = "none";
+int create_container() {
 
-    if(i == 1) {
+    int container_type;
+
+    printf("1. BusyBox Container \n");
+    printf("2. Apline Container \n");
+    printf("\nChoose Option From Menu Above 1-2: ");
+    scanf("%d", &container_type);
+
+
+    if(container_type == 1) {
         printf("\nCreating BusyBox container...\n\n");
-        // container_type = "alpine";
+        chdir("cd ca644_alpine");
     }
-    else if(i == 2) {
+    else if(container_type == 2) {
         printf("\nCreating new Alpine container...\n\n");
         // container_type = "busybox";
     }
+    else {
+        printf("\nUnvalid container option\n\n");
+        return 1;
+    }
 
-    return 0;
+
+    char *arg[] = {"runc", "create", "test", NULL};
+    return execvp(arg[0], arg);
 }
 
 int main() {
@@ -72,7 +85,7 @@ int main() {
     printf("        Container Util - System Call      \n");
     printf("------------------------------------------\n\n");
 
-    int menu_option, new_container_type;
+    int menu_option;
     int container_id_size = 20;
     char *container_id = (char*)malloc(container_id_size);
     long int ret_code;
@@ -105,12 +118,8 @@ int main() {
             ret_code = syscall(333, menu_option, container_id);
             break;
         case(5):
-            printf("\n --- Choose New Container Type --- \n\n");
-            printf("1. BusyBox Container \n");
-            printf("2. Apline Container \n");
-            printf("\nChoose Option From Menu Above 1-2: ");
-            scanf("%d", &new_container_type);
-            create_container(new_container_type);
+            printf("\n --- Create Container --- \n\n");
+            ret_code = create_container();
             break;
         default:
             printf("\n Invalid Choice! \n");
