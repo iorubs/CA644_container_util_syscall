@@ -125,5 +125,5 @@ int main() {
             printf("\n Invalid Choice! \n");
     }
 
-    free(temp);
+    free(container_id);
 }
