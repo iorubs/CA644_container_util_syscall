@@ -83,25 +83,36 @@ int main() {
 
     switch(menu_option) {
         case(1):
-            printf("\n --- Choose New Container Type --- \n\n");
-            printf("1. BusyBox Container \n");
-            printf("2. Apline Container \n");
-            printf("\nChoose Option From Menu Above 1-2: ");
-            scanf("%d", &new_container_choice);
-            create_container(new_container_choice);
+            // printf("\n --- Choose New Container Type --- \n\n");
+            // printf("1. BusyBox Container \n");
+            // printf("2. Apline Container \n");
+            // printf("\nChoose Option From Menu Above 1-2: ");
+            // scanf("%d", &new_container_choice);
+            // create_container(new_container_choice);
+            printf("\n --- Create Container --- \n\n");
+            ret_code = syscall(333, 1, NULL);
             break;
-
         case(2):
             printf("\n --- List Containers --- \n\n");
             ret_code = syscall(333, 2, NULL);
             display_file("/tmp/ca644_util_log");
             break;
         case(3):
-            printf("\nEnter Container ID : ");
-            scanf("%d", &container_id_choice);
-            manage_container(container_id_choice);
+            // printf("\nEnter Container ID : ");
+            // scanf("%d", &container_id_choice);
+            // manage_container(container_id_choice);
+            // break;
+            printf("\n --- Start Container --- \n\n");
+            ret_code = syscall(333, 3, NULL);
             break;
-
+        case(4):
+            printf("\n --- Delete Container --- \n\n");
+            ret_code = syscall(333, 4, NULL);
+            break;
+        case(5):
+            printf("\n --- List services inside container --- \n\n");
+            ret_code = syscall(333, 5, NULL);
+            break;
         default:
             printf("\n Invalid Choice! \n");
             break;
