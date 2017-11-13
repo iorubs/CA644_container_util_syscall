@@ -56,19 +56,19 @@ int create_container() {
 
     int container_type;
 
-    printf("1. BusyBox Container \n");
-    printf("2. Apline Container \n");
+    printf("1. Alpine Container \n");
+    printf("2. BusyBox Container \n");
     printf("\nChoose Option From Menu Above 1-2: ");
     scanf("%d", &container_type);
 
 
     if(container_type == 1) {
-        printf("\nCreating BusyBox container...\n\n");
-        chdir("cd ca644_alpine");
+        printf("\nCreating Alpine container...\n\n");
+        chdir("ca644_alpine");
     }
     else if(container_type == 2) {
-        printf("\nCreating new Alpine container...\n\n");
-        // container_type = "busybox";
+        printf("\nNot implemented, but could be extended.\n\n");
+        return 1;
     }
     else {
         printf("\nUnvalid container option\n\n");
