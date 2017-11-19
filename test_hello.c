@@ -17,40 +17,42 @@ static void display_file(const char *file_name) {
 }
 
 int manage_option(int i) {
-	
-        int container_id_size = 20;
-    	char container_id[container_id_size];
-    	long int ret_code;
-	int manage_choice;	
+    int container_id_size = 20;
+	char container_id[container_id_size];
+	long int ret_code;
 
 	if(i == 2) {
-		printf("Start Container With Id : ");
-    		scanf("%s", container_id);
-		printf("\nStarting Container...\n\n");
-                ret_code = syscall(333, i, container_id);
-      
-	}else if(i == 3) {
-		printf("Delete Container With Id : ");
-    		scanf("%d", &manage_choice);
+        printf("\n --- Start Container --- \n\n");
+        printf("Enter Container ID: ");
+        scanf("%s", container_id);
+        printf("\nStarting Container...\n\n");
+        ret_code = syscall(333, i, container_id);
+	}
+    else if(i == 3) {
+        printf("\n --- Delete Container --- \n\n");
+		printf("Enter Container ID: ");
+    	scanf("%d", &container_id);
 		printf("\nDeleting Container...\n\n");
 		ret_code = syscall(333, i, container_id);
-
-	}else if(i == 4) {
-		printf("List services inside container With Id : ");
-    		scanf("%s", container_id);
-		ret_code = syscall(333, i, container_id);
-
-
-	}else if(i == 5) {
-		printf("Create Container With Id : ");
-    		scanf("%s", container_id);
-                chdir("ca644_alpine");
-		char *arg[] = {"runc", "create", container_id, NULL};
-                printf("\nCreating Container...\n\n");
-                return execvp(arg[0], arg);	
-	}else {
-        	printf("\nInvalid Choice Exiting...\n\n");
-        	return 0;
+	}
+    else if(i == 4) {
+        printf("\n --- List services inside container --- \n\n");
+    	printf("Enter Container ID: ");
+    	scanf("%s", container_id);
+    	ret_code = syscall(333, i, container_id);
+	}
+    else if(i == 5) {
+        printf("\n --- Create Container --- \n\n");
+        printf("Enter Container ID: ");
+        scanf("%s", container_id);
+        chdir("ca644_alpine");
+        char *arg[] = {"runc", "create", container_id, NULL};
+        printf("\nCreating Container...\n\n");
+        return execvp(arg[0], arg);
+	}
+    else {
+    	printf("\nInvalid Choice Exiting...\n\n");
+    	return 0;
     }
 }
 
@@ -72,30 +74,15 @@ int main() {
     printf("Choose Option From Menu Above 1-5: ");
     scanf("%d", &menu_option);
 
-    switch(menu_option) {
-        case(1):
-            printf("\n --- List Containers --- \n\n");
-            ret_code = syscall(333, menu_option, NULL);
-            display_file("/tmp/ca644_util_log");
-            break;
-        case(2):
-            printf("\n --- Start Container --- \n\n");
-	    manage_option(menu_option);
-            break;
-        case(3):
-            printf("\n --- Delete Container --- \n\n");
-	    manage_option(menu_option);
-
-            break;
-        case(4):
-            printf("\n --- List services inside container --- \n\n");
-            manage_option(menu_option);
-            break;
-        case(5):
-            printf("\n --- Create Container --- \n\n");
-            manage_option(menu_option);
-            break;
-        default:
-            printf("\n Invalid Choice! \n");
+    if (menu_option == 1) {
+        printf("\n --- List Containers --- \n\n");
+        ret_code = syscall(333, menu_option, NULL);
+        display_file("/tmp/ca644_util_log");
+    }
+    else if (menu_option >= 2 && menu_option <= 5) {
+        manage_option(menu_option);
+    }
+    else {
+        printf("\n Invalid Choice! \n");
     }
 }
