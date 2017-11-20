@@ -1,9 +1,8 @@
 #include <linux/kernel.h>
 #include <linux/kmod.h>
+#include <linux/string.h>
 
 asmlinkage long sys_hello(int container_action, char *container_id) {
-
-    printk("The caller id is:  %i\n", current->pid);
 
     char *envp[] = {
         "HOME=/",
@@ -13,23 +12,37 @@ asmlinkage long sys_hello(int container_action, char *container_id) {
 
     char * argv[] = {"/bin/bash", "-c", "command", NULL};
 
+    char dest[50];
+    dest[sizeof(dest)] = '\0';
+    strcpy(dest, "runc ");
+
     printk("Container id: %s \n", container_id);
 
     if (container_action == 1) {
         printk("Running container list.\n");
-        argv[2] = "runc list > /tmp/ca644_util_log";
+        strncat(dest, "list > /tmp/ca644_util_log", 50);
+        argv[2] = dest;
     }
     else if (container_action == 2) {
         printk("Running container start.\n");
-        argv[2] = "runc start test 2> /tmp/ca644_util_log";
+        strncat(dest, "start ", 50);
+        strncat(dest, container_id, 50);
+        strncat(dest, " 2> /tmp/ca644_util_log", 50);
+        argv[2] = dest;
     }
     else if (container_action == 3) {
         printk("Running container delete.\n");
-        argv[2] = "runc delete test 2> /tmp/ca644_util_log";
+        strncat(dest, "delete ", 50);
+        strncat(dest, container_id, 50);
+        strncat(dest, " 2> /tmp/ca644_util_log", 50);
+        argv[2] = dest;
     }
     else if (container_action == 4) {
         printk("Running container ps.\n");
-        argv[2] = "runc ps test > /tmp/ca644_util_log 2>&1";
+        strncat(dest, "ps ", 50);
+        strncat(dest, container_id, 50);
+        strncat(dest, " > /tmp/ca644_util_log 2>&1", 50);
+        argv[2] = dest;
     }
 
     return call_usermodehelper(argv[0], argv, envp, UMH_WAIT_PROC);

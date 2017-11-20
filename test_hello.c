@@ -18,29 +18,29 @@ static void display_file(const char *file_name) {
 
 int manage_option(int i) {
     int container_id_size = 20;
-	char container_id[container_id_size];
-	long int ret_code;
+    char container_id[container_id_size];
+    long int ret_code;
 
-	if(i == 2) {
+    if(i == 2) {
         printf("\n --- Start Container --- \n\n");
         printf("Enter Container ID: ");
         scanf("%s", container_id);
         printf("\nStarting Container...\n\n");
         ret_code = syscall(333, i, container_id);
-	}
+    }
     else if(i == 3) {
         printf("\n --- Delete Container --- \n\n");
-		printf("Enter Container ID: ");
-    	scanf("%d", &container_id);
-		printf("\nDeleting Container...\n\n");
-		ret_code = syscall(333, i, container_id);
-	}
+        printf("Enter Container ID: ");
+        scanf("%s", container_id);
+        printf("\nDeleting Container...\n\n");
+        ret_code = syscall(333, i, container_id);
+    }
     else if(i == 4) {
         printf("\n --- List services inside container --- \n\n");
-    	printf("Enter Container ID: ");
-    	scanf("%s", container_id);
-    	ret_code = syscall(333, i, container_id);
-	}
+        printf("Enter Container ID: ");
+        scanf("%s", container_id);
+        ret_code = syscall(333, i, container_id);
+    }
     else if(i == 5) {
         printf("\n --- Create Container --- \n\n");
         printf("Enter Container ID: ");
@@ -49,10 +49,10 @@ int manage_option(int i) {
         char *arg[] = {"runc", "create", container_id, NULL};
         printf("\nCreating Container...\n\n");
         return execvp(arg[0], arg);
-	}
+    }
     else {
-    	printf("\nInvalid Choice Exiting...\n\n");
-    	return 0;
+        printf("\nInvalid Choice Exiting...\n\n");
+        return 0;
     }
 }
 
