@@ -1,7 +1,9 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/syscall.h>
 #include <unistd.h>
+extern FILE *stdin;
 
 static void display_file(const char *file_name) {
     FILE *f = fopen(file_name, "r");
@@ -14,6 +16,13 @@ static void display_file(const char *file_name) {
     }
 }
 
+void validate(char *input) {
+    if(strlen(input) < 0 || strlen(input) > 20 || input == NULL || input == "\n") {
+        printf("\nOps, Invalid Container Id.. Exiting\n\n");
+        exit(0);
+    }
+} 
+
 int manage_option(int option) {
     int container_id_size = 20;
     char container_id[container_id_size];
@@ -21,23 +30,25 @@ int manage_option(int option) {
     if(option == 2) {
         printf("\n --- Create Container --- \n\n");
         printf("Enter Container ID: ");
-        scanf("%s", container_id);
-        chdir("ca644_alpine");
+	scanf("%s", container_id);
+        validate(container_id);
+	chdir("ca644_alpine");
         char *arg[] = {"runc", "create", container_id, NULL};
         printf("\nCreating Container...\n\n");
-        return execvp(arg[0], arg);
+        return execvp(arg[0], arg);    
     }
     else if(option == 3) {
         printf("\n --- Get Container State --- \n\n");
         printf("Enter Container ID: ");
         scanf("%s", container_id);
-        printf("\nStarting Container...\n\n");
+        validate(container_id);
         return syscall(333, option, container_id);
     }
     else if(option == 4) {
         printf("\n --- Start Container --- \n\n");
         printf("Enter Container ID: ");
         scanf("%s", container_id);
+        validate(container_id);
         printf("\nStarting Container...\n\n");
         return syscall(333, option, container_id);
     }
@@ -45,6 +56,7 @@ int manage_option(int option) {
         printf("\n --- List services inside container --- \n\n");
         printf("Enter Container ID: ");
         scanf("%s", container_id);
+        validate(container_id);
         int ret_code = syscall(333, option, container_id);
 
         if(ret_code == 0) {
@@ -57,27 +69,31 @@ int manage_option(int option) {
         printf("\n --- Pause Container Execution --- \n\n");
         printf("Enter Container ID: ");
         scanf("%s", container_id);
-        printf("\nStarting Container...\n\n");
+        validate(container_id);
+        printf("Pausing Container...\n\n");
         return syscall(333, option, container_id);
     }
     else if(option == 7) {
         printf("\n --- Resume Container Execution --- \n\n");
         printf("Enter Container ID: ");
         scanf("%s", container_id);
-        printf("\nStarting Container...\n\n");
+        validate(container_id);
+        printf("Resuming Container Execution...\n\n");
         return syscall(333, option, container_id);
     }
     else if(option == 8) {
         printf("\n --- Kill Container --- \n\n");
         printf("Enter Container ID: ");
         scanf("%s", container_id);
-        printf("\nStarting Container...\n\n");
+        validate(container_id);
+        printf("\nKilling Container...\n\n");
         return syscall(333, option, container_id);
     }
     else if(option == 9) {
         printf("\n --- Delete Stopped Container --- \n\n");
         printf("Enter Container ID: ");
         scanf("%s", container_id);
+        validate(container_id);
         printf("\nDeleting Container...\n\n");
         return syscall(333, option, container_id);
     }
@@ -106,7 +122,7 @@ int main() {
     printf("8. Kill Container\n");
     printf("9. Delete Stopped Container\n");
     printf("Choose Option From Menu Above 1-9: ");
-    scanf("%d", &menu_option);
+    scanf("%d1", &menu_option);
 
     if (menu_option == 1) {
         printf("\n --- List Containers --- \n\n");
