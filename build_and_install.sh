@@ -14,7 +14,7 @@ apt-get install -y \
     runc
 
 test $? -ne 0 &&
-{ echo "Failled to update and install dependecies" >&2 ; exit 1; }
+{ echo "Failled to update and install dependecies." >&2 ; exit 1; }
 
 # Download kernel
 kernel_major_v="4"
