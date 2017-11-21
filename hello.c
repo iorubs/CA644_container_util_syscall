@@ -68,7 +68,7 @@ asmlinkage long sys_hello(int container_action, char *container_id) {
     }
 
     char * argv[] = {"/bin/bash", "-c", dest, NULL};
-    ret_code = call_usermodehelper(argv[0], argv, envp, UMH_WAIT_PROC);
+    int ret_code = call_usermodehelper(argv[0], argv, envp, UMH_WAIT_PROC);
 
     if(ret_code != 0) {
         printk("Could not execute container action.\n");
