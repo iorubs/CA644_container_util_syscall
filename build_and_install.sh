@@ -13,6 +13,9 @@ apt-get install -y \
     libncursesw5-dev \
     runc
 
+test $? -ne 0 &&
+{ echo "Failled to update and install dependecies" >&2 ; exit 1; }
+
 # Download kernel
 kernel_major_v="4"
 kernel_minor_v="13.11"
