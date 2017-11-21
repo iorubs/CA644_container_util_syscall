@@ -1,6 +1,4 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <linux/kernel.h>
 #include <string.h>
 #include <sys/syscall.h>
 #include <unistd.h>
