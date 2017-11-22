@@ -1,8 +1,11 @@
 #include <linux/kernel.h>
 #include <linux/kmod.h>
 #include <linux/string.h>
+#include <linux/sched.h>
 
 asmlinkage long sys_hello(int container_action, char *container_id) {
+
+   printk("System call was initiated by : %s with pid : %i", current->comm,current->pid);
 
     char *envp[] = {
         "HOME=/",
@@ -73,6 +76,8 @@ asmlinkage long sys_hello(int container_action, char *container_id) {
     if(ret_code != 0) {
         printk("Could not execute container action.\n");
     }
-
+    else {
+       printk("Container action executed successfully.\n");
+    }
     return ret_code;
 }
