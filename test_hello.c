@@ -19,10 +19,12 @@ int manage_option(int option) {
     int container_id_size = 20;
     char container_id[container_id_size];
 
+
     if(option == 2) {
         printf("\n --- Create Container --- \n\n");
         printf("Enter Container ID: ");
         fgets(container_id, 40 , stdin);
+        container_id[strlen(container_id) - 1] = '\0';
         chdir("ca644_alpine");
         char *arg[] = {"runc", "create", container_id, NULL};
         printf("\nCreating Container...\n\n");
@@ -32,6 +34,7 @@ int manage_option(int option) {
         printf("\n --- Get Container State --- \n\n");
         printf("Enter Container ID: ");
         fgets(container_id, 40 , stdin);
+        container_id[strlen(container_id) - 1] = '\0';
         int ret_code = syscall(333, option, container_id);
 
         if(ret_code == 0) {
@@ -43,6 +46,7 @@ int manage_option(int option) {
         printf("\n --- Start Container --- \n\n");
         printf("Enter Container ID: ");
         fgets(container_id, 40 , stdin);
+        container_id[strlen(container_id) - 1] = '\0';
         printf("\nStarting Container...\n\n");
         return syscall(333, option, container_id);
     }
@@ -50,6 +54,7 @@ int manage_option(int option) {
         printf("\n --- List services inside container --- \n\n");
         printf("Enter Container ID: ");
         fgets(container_id, 40 , stdin);
+        container_id[strlen(container_id) - 1] = '\0';
         int ret_code = syscall(333, option, container_id);
 
         if(ret_code == 0) {
@@ -62,6 +67,7 @@ int manage_option(int option) {
         printf("\n --- Pause Container Execution --- \n\n");
         printf("Enter Container ID: ");
         fgets(container_id, 40 , stdin);
+        container_id[strlen(container_id) - 1] = '\0';
         printf("Pausing Container...\n\n");
         return syscall(333, option, container_id);
     }
@@ -69,6 +75,7 @@ int manage_option(int option) {
         printf("\n --- Resume Container Execution --- \n\n");
         printf("Enter Container ID: ");
         fgets(container_id, 40 , stdin);
+        container_id[strlen(container_id) - 1] = '\0';
         printf("Resuming Container Execution...\n\n");
         return syscall(333, option, container_id);
     }
@@ -76,6 +83,7 @@ int manage_option(int option) {
         printf("\n --- Kill Container --- \n\n");
         printf("Enter Container ID: ");
         fgets(container_id, 40 , stdin);
+        container_id[strlen(container_id) - 1] = '\0';
         printf("\nKilling Container...\n\n");
         return syscall(333, option, container_id);
     }
@@ -83,6 +91,7 @@ int manage_option(int option) {
         printf("\n --- Delete Stopped Container --- \n\n");
         printf("Enter Container ID: ");
         fgets(container_id, 40 , stdin);
+        container_id[strlen(container_id) - 1] = '\0';
         printf("\nDeleting Container...\n\n");
         return syscall(333, option, container_id);
     }
