@@ -49,6 +49,7 @@ make modules_install install
 test $? -ne 0 &&
 { echo "Unable to compile and install kernel, possibly a dependecy issue." >&2; exit 1; }
 
+#Update GRUB boot order.
 mkinitramfs -o /boot/initrd.img-$kernel_full_v $kernel_full_v &&
 update-grub &&
 reboot now
