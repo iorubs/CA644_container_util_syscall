@@ -3,42 +3,51 @@
 #include <linux/string.h>
 #include <linux/sched.h>
 
-#TODO: size constants, start and exit fucntions
+#define ID_LEN 20
+#define COMMAND_LEN 50
+#define LIST 1
+#define STATE 3
+#define START 4
+#define PS 5
+#define PAUSE 6
+#define RESUME 7
+#define KILL 8
+#define DELETE 9
 
 void filterAction(char* dest, int container_action) {
     strcpy(dest, "runc ");
 
-    if (container_action == 1) {
+    if (container_action == LIST) {
         printk("Get list of containers.\n");
-        strncat(dest, "list", 50);
+        strncat(dest, "list", COMMAND_LEN);
     }
-    else if (container_action == 3) {
+    else if (container_action == STATE) {
         printk("Get container state.\n");
-        strncat(dest, "state ", 50);
+        strncat(dest, "state ", COMMAND_LEN);
     }
-    else if (container_action == 4) {
+    else if (container_action == START) {
         printk("Start container.\n");
-        strncat(dest, "start ", 50);
+        strncat(dest, "start ", COMMAND_LEN);
     }
-    else if (container_action == 5) {
+    else if (container_action == PS) {
         printk("List Container services.\n");
-        strncat(dest, "ps ", 50);
+        strncat(dest, "ps ", COMMAND_LEN);
     }
-    else if (container_action == 6) {
+    else if (container_action == PAUSE) {
         printk("Pause running container.\n");
-        strncat(dest, "pause ", 50);
+        strncat(dest, "pause ", COMMAND_LEN);
     }
-    else if (container_action == 7) {
+    else if (container_action == RESUME) {
         printk("Resume paused container.\n");
-        strncat(dest, "resume ", 50);
+        strncat(dest, "resume ", COMMAND_LEN);
     }
-    else if (container_action == 8) {
+    else if (container_action == KILL) {
         printk("Kill container (force stop).\n");
-        strncat(dest, "kill ", 50);
+        strncat(dest, "kill ", COMMAND_LEN);
     }
-    else if (container_action == 9) {
+    else if (container_action == DELETE) {
         printk("Delete stopped container.\n");
-        strncat(dest, "delete ", 50);
+        strncat(dest, "delete ", COMMAND_LEN);
     }
 }
 
@@ -51,12 +60,12 @@ asmlinkage long sys_hello(int container_action, char *container_id) {
         "PWD=/",
         "PATH=/bin:/usr/sbin", NULL };
 
-    char dest[50];
+    char dest[COMMAND_LEN];
     dest[sizeof(dest)] = '\0';
 
     printk("Container id: %s \n", container_id);
 
-    if (container_action >= 1 && container_action <= 9) {
+    if (container_action >= LIST && container_action <= DELETE) {
         filterAction(dest, container_action);
     }
     else {
@@ -64,16 +73,16 @@ asmlinkage long sys_hello(int container_action, char *container_id) {
         return 1;
     }
  
-    if(container_action != 1)
-        strncat(dest, container_id, 50);
+    if(container_action != LIST)
+        strncat(dest, container_id, COMMAND_LEN);
 
-    if(container_action == 8)
-        strncat(dest, " KILL", 50);
+    if(container_action == KILL)
+        strncat(dest, " KILL", COMMAND_LEN);
 
-    if(container_action == 1 || container_action == 3 || container_action == 5)
-        strncat(dest, " > /tmp/ca644_util_log 2>&1", 50);
+    if(container_action == LIST || container_action == STATE || container_action == PS)
+        strncat(dest, " > /tmp/ca644_util_log 2>&1", COMMAND_LEN);
     else
-        strncat(dest, " 2> /tmp/ca644_util_log", 50);
+        strncat(dest, " 2> /tmp/ca644_util_log", COMMAND_LEN);
 
     char * argv[] = {"/bin/bash", "-c", dest, NULL};
     int ret_code = call_usermodehelper(argv[0], argv, envp, UMH_WAIT_PROC);
