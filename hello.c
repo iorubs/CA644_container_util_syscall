@@ -3,21 +3,10 @@
 #include <linux/string.h>
 #include <linux/sched.h>
 
-asmlinkage long sys_hello(int container_action, char *container_id) {
+#TODO: size constants, start and exit fucntions
 
-   printk("System call was initiated by : %s with pid : %i", current->comm,current->pid);
-
-    char *envp[] = {
-        "HOME=/",
-        "TERM=linux",
-        "PWD=/",
-        "PATH=/bin:/usr/sbin", NULL };
-
-    char dest[50];
-    dest[sizeof(dest)] = '\0';
+void filterAction(char* dest, int container_action) {
     strcpy(dest, "runc ");
-
-    printk("Container id: %s \n", container_id);
 
     if (container_action == 1) {
         printk("Get list of containers.\n");
@@ -51,16 +40,36 @@ asmlinkage long sys_hello(int container_action, char *container_id) {
         printk("Delete stopped container.\n");
         strncat(dest, "delete ", 50);
     }
+}
+
+asmlinkage long sys_hello(int container_action, char *container_id) {
+   printk("System call was initiated by : %s with pid : %i", current->comm,current->pid);
+
+    char *envp[] = {
+        "HOME=/",
+        "TERM=linux",
+        "PWD=/",
+        "PATH=/bin:/usr/sbin", NULL };
+
+    char dest[50];
+    dest[sizeof(dest)] = '\0';
+
+    printk("Container id: %s \n", container_id);
+
+    if (container_action >= 1 && container_action <= 9) {
+        filterAction(dest, container_action);
+    }
     else {
         printk("Invalid container action.\n");
         return 1;
     }
-    
-    strncat(dest, container_id, 50);
-    
+ 
+    if(container_action != 1)
+        strncat(dest, container_id, 50);
+
     if(container_action == 8)
         strncat(dest, " KILL", 50);
-    
+
     if(container_action == 1 || container_action == 3 || container_action == 5)
         strncat(dest, " > /tmp/ca644_util_log 2>&1", 50);
     else
