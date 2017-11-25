@@ -52,7 +52,13 @@ void filterAction(char* dest, int container_action) {
 }
 
 asmlinkage long sys_hello(int container_action, char *container_id) {
-   printk("System call was initiated by : %s with pid : %i", current->comm,current->pid);
+
+    printk("System call was initiated by : %s with pid : %i", current->comm,current->pid);
+
+    if(strlen(container_id) > ID_LEN || strlen(container_id) <= 0) {
+        printk("Container Id Invalid, system call aborted..\n");
+        return 1;
+    }
 
     char *envp[] = {
         "HOME=/",
@@ -91,6 +97,5 @@ asmlinkage long sys_hello(int container_action, char *container_id) {
         printk("Could not execute container action.\n");
     else
         printk("Container action executed successfully.\n");
-
     return ret_code;
 }
