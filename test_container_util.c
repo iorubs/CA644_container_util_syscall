@@ -25,6 +25,8 @@ static void display_file(const char *file_name) {
         }
         fclose(f_ptr);
     }
+
+    printf("\n");
 }
 
 void getContainerID(char* container_id) {
