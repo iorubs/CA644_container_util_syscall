@@ -14,11 +14,11 @@ apt-get install -y \
     runc
 
 test $? -ne 0 &&
-{ echo "Failled to update and install dependecies." >&2 ; exit 1; }
+{ echo "Failed to update and install dependencies." >&2 ; exit 1; }
 
 # Download kernel
 kernel_major_v="4"
-kernel_minor_v="13.11"
+kernel_minor_v="14.2"
 kernel_full_v="$kernel_major_v.$kernel_minor_v"
 
 rm -rf /usr/src/linux-$kernel_full_v linux-$kernel_full_v.tar.gz &&
@@ -27,7 +27,7 @@ tar -xvf linux-$kernel_full_v.tar.gz -C/usr/src/ &&
 rm -rf linux-$kernel_full_v.tar.gz
 
 test $? -ne 0 &&
-{ echo "Failled to download/untar linux kernel $kernel_full_v, make sure you picked a valid version." >&2 ; exit 1; }
+{ echo "Failed to download/untar linux kernel $kernel_full_v, make sure you picked a valid version." >&2 ; exit 1; }
 
 # Add new system call
 mkdir /usr/src/linux-$kernel_full_v/hello &&
@@ -47,9 +47,9 @@ make -j$(nproc) &&
 make modules_install install
 
 test $? -ne 0 &&
-{ echo "Unable to compile and install kernel, possibly a dependecy issue." >&2; exit 1; }
+{ echo "Unable to compile and install kernel, possibly a dependency issue." >&2; exit 1; }
 
 #Update GRUB boot order.
 mkinitramfs -o /boot/initrd.img-$kernel_full_v $kernel_full_v &&
 update-grub &&
-reboot now
+reboot
