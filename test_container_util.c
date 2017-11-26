@@ -4,6 +4,18 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
+#define SYS_CALL 333
+#define ID_LEN 20
+#define LIST 1
+#define CREATE 2
+#define STATE 3
+#define START 4
+#define PS 5
+#define PAUSE 6
+#define RESUME 7
+#define KILL 8
+#define DELETE 9
+
 static void display_file(const char *file_name) {
     FILE *f_ptr = fopen(file_name, "r");
     if (f_ptr != NULL) {
@@ -17,36 +29,36 @@ static void display_file(const char *file_name) {
 
 void getContainerID(char* container_id) {
     printf("Enter Container ID: ");
-    fgets(container_id, 40 , stdin);
+    fgets(container_id, ID_LEN , stdin);
     container_id[strlen(container_id) - 1] = '\0';
 }
 
 int manage_option(int option) {
-    int container_id_size = 20;
+    int container_id_size = ID_LEN;
     char container_id[container_id_size];
 
-    if (option == 1) { printf("\n --- List Containers --- \n\n"); }
-    else if(option == 2) {
+    if (option == LIST) { printf("\n --- List Containers --- \n\n"); }
+    else if(option == CREATE) {
         printf("\n --- Create Container --- \n\n");
         getContainerID(container_id);
         chdir("ca644_alpine");
         char *arg[] = {"runc", "create", container_id, NULL};
         return execvp(arg[0], arg);
     }
-    else if(option == 3) { printf("\n --- Get Container State --- \n\n"); }
-    else if(option == 4) { printf("\n --- Start Container --- \n\n"); }
-    else if(option == 5) { printf("\n --- List services inside container --- \n\n"); }
-    else if(option == 6) { printf("\n --- Pause Container Execution --- \n\n"); }
-    else if(option == 7) { printf("\n --- Resume Container Execution --- \n\n"); }
-    else if(option == 8) { printf("\n --- Kill Container --- \n\n"); }
-    else if(option == 9) { printf("\n --- Delete Stopped Container --- \n\n"); }
+    else if(option == STATE) { printf("\n --- Get Container State --- \n\n"); }
+    else if(option == START) { printf("\n --- Start Container --- \n\n"); }
+    else if(option == PS) { printf("\n --- List services inside container --- \n\n"); }
+    else if(option == PAUSE) { printf("\n --- Pause Container Execution --- \n\n"); }
+    else if(option == RESUME) { printf("\n --- Resume Container Execution --- \n\n"); }
+    else if(option == KILL) { printf("\n --- Kill Container --- \n\n"); }
+    else if(option == DELETE) { printf("\n --- Delete Stopped Container --- \n\n"); }
 
-    if(option != 1)
+    if(option != LIST)
         getContainerID(container_id);
 
-    int ret_code = syscall(333, option, container_id);
+    int ret_code = syscall(SYS_CALL, option, container_id);
 
-    if(ret_code == 0 && (option == 1 || option == 3 || option == 5))
+    if(ret_code == 0 && (option == LIST || option == STATE || option == PS))
         display_file("/tmp/ca644_util_log");
 
     return ret_code;
@@ -76,13 +88,13 @@ int startMenu() {
 }
 
 int main() {
-    int container_id_size = 20;
+    int container_id_size = ID_LEN;
     int menu_option, ret_code;
     char container_id[container_id_size];
 
     menu_option = startMenu();
 
-    if (menu_option >= 1 && menu_option <= 9) {
+    if (menu_option >= LIST && menu_option <= DELETE) {
         ret_code = manage_option(menu_option);
     }
     else {
@@ -93,7 +105,7 @@ int main() {
     if(ret_code != 0) {
         printf("\n OH OH Something went wrong! \n");
 
-        if (menu_option >= 2 && menu_option <= 9) {
+        if (menu_option != CREATE) {
             display_file("/tmp/ca644_util_log");
         }
 

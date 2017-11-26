@@ -51,7 +51,7 @@ void filterAction(char* dest, int container_action) {
     }
 }
 
-asmlinkage long sys_hello(int container_action, char *container_id) {
+asmlinkage long sys_container_util(int container_action, char *container_id) {
 
     printk("System call was initiated by : %s with pid : %i", current->comm,current->pid);
 
@@ -78,7 +78,7 @@ asmlinkage long sys_hello(int container_action, char *container_id) {
         printk("Invalid container action.\n");
         return 1;
     }
- 
+
     if(container_action != LIST)
         strncat(dest, container_id, COMMAND_LEN);
 

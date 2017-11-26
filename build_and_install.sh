@@ -30,15 +30,15 @@ test $? -ne 0 &&
 { echo "Failed to download/untar linux kernel $kernel_full_v, make sure you picked a valid version." >&2 ; exit 1; }
 
 # Add new system call
-mkdir /usr/src/linux-$kernel_full_v/hello &&
-cp hello.c Makefile /usr/src/linux-$kernel_full_v/hello/
+mkdir /usr/src/linux-$kernel_full_v/container_util &&
+cp container_util.c Makefile /usr/src/linux-$kernel_full_v/container_util/
 
-sed -ri 's/core-y.*kernel.*/& hello\//' /usr/src/linux-$kernel_full_v/Makefile &&
-sed -ri 's/^#endif$/asmlinkage long sys_hello(void);\n&/' /usr/src/linux-$kernel_full_v/include/linux/syscalls.h
+sed -ri 's/core-y.*kernel.*/& container_util\//' /usr/src/linux-$kernel_full_v/Makefile &&
+sed -ri 's/^#endif$/asmlinkage long sys_container_util(void);\n&/' /usr/src/linux-$kernel_full_v/include/linux/syscalls.h
 
 sed -rie 'N;s/([0-9]+).*\n^$/&\1\n/;P;D' /usr/src/linux-$kernel_full_v/arch/x86/entry/syscalls/syscall_64.tbl &&
 sys_call_num=$(($(grep -E "^[0-9]+$" /usr/src/linux-$kernel_full_v/arch/x86/entry/syscalls/syscall_64.tbl)+1)) &&
-sed -ri "s/^[0-9]+$/$sys_call_num\t64\thello\t\t\tsys_hello/g" /usr/src/linux-$kernel_full_v/arch/x86/entry/syscalls/syscall_64.tbl
+sed -ri "s/^[0-9]+$/$sys_call_num\t64\tcontainer_util\t\t\tsys_container_util/g" /usr/src/linux-$kernel_full_v/arch/x86/entry/syscalls/syscall_64.tbl
 
 # Compile kernel and install kernel modules.
 cd /usr/src/linux-$kernel_full_v &&
